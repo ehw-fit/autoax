@@ -1,5 +1,5 @@
-# XFPGAs
-This repository presents a basic scheme for evaluating XFPGAs algorithm for automatic approximation of hardware accelerators. If the paper is accepted, it will be further modified and basic examples (such as a gaussian filter) will be added.
+# Xel-FPGAs
+This repository presents a basic scheme for evaluating Xel-FPGAs algorithm for automatic approximation of hardware accelerators. By the end of September 2023 basic examples (such as a gaussian filter) will be added.
 
 ## Requirements:
 - Python3, Pandas, Scikit-learn, pyparetoarchive packages
