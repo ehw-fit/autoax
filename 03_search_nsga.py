@@ -182,7 +182,17 @@ def do_nsga(config, variant, iterations=10000, p_size=200, q_size=100, mutation_
     print()
     print("Done in %f seconds" % (time.time() - start))
 
-    json.dump(parent, gzip.open(result_file, "wt"), indent=2)
+    outc = {}
+    for x in parent:
+        while True:
+            cid = f"nsga_{variant}_" + uuid1().hex[:8].upper()
+            if not cid in outc:
+                break
+            print(cid, cid in outc)
+
+        assert cid not in outc
+        outc[cid] = x.copy()
+    json.dump(outc, gzip.open(result_file, "wt"), indent=2)
 
 
 if __name__ == "__main__":
