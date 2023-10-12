@@ -1,0 +1,71 @@
+
+library:
+  add9:
+    json: lib/add9.json.gz
+    verilog: lib/add9.zip
+    c_header: lib/add9.h
+    c_source: lib/add9.c
+  add8:
+    json: lib/add8.json.gz
+    verilog: lib/add8.zip
+    c_header: lib/add8.h
+    c_source: lib/add8.c
+  sub10:
+    json: lib/sub10.json.gz
+    verilog: lib/sub10.zip
+    c_header: lib/sub10.h
+    c_source: lib/sub10.c
+
+# result files
+evaluate_lib: eval/lib_tuples.cpp
+evaluate_verilog: synth/template.v
+
+
+# 
+variants:
+  v1:
+    ml: [RandomForrest, SVC, BayesianRidge] # used machine learning modes
+    objectives:  # objectives calculated by HW sysnthesis and QoR evaluation
+      qor: PSNR_AVG
+      hw: power
+    features: # features used 
+      hw: [ pdk45_pwr, pdk45_delay, pdk45_area]
+      qor: [ mae_norm, var_norm ]
+
+  v2:
+    ml: [RandomForrest, SVC, BayesianRidge]
+    modules: [ABCall, ABClib]
+    objectives:
+      qor: PSNR_AVG
+      hw: power
+    features:
+      hw: [ abclib_lat, abclib_lev, abclib_power ]
+      hwglob: [ abcall_lat, abcall_lev, abcall_power ]     
+      qor: [ mae_norm, var_norm ]
+
+
+  v3:
+    ml: [RandomForrest, SVC, BayesianRidge]
+    modules: ABCall
+    moduleslib: ABClib
+    objectives:
+      qor: PSNR_AVG
+      hw: power
+    features:
+      hw: [ pdk45_pwr, pdk45_delay, pdk45_area]
+      qor: [ mae_norm, var_norm ]
+
+components:
+  # module name and the link for the library
+  opAdd1: add8
+  opAdd2: add9
+  opAdd3: add8
+  opAdd4: add9
+  opSub: sub10
+
+
+# result directory of this experiment
+results: res
+
+# temporary directory
+temporary: tmp

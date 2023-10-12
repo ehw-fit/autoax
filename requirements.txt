@@ -1,0 +1,9 @@
+joblib>=1.2.0
+matplotlib>=3.5.1
+numpy>=1.25.2
+pandas>=1.3.5
+py_paretoarchive>=0.19
+PyYAML>=6.0
+scikit_learn>=1.3.1
+seaborn>=0.13.0
+tqdm>=4.64.1

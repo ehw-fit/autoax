@@ -1,3 +1,9 @@
+_old
+tmp
+vivado*.jou
+vivado*.log
+.Xil
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
