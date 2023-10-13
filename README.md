@@ -30,7 +30,7 @@ sudo apt install berkley-abc
 ## Example application
 The system is easily configurable. You can follow an example for the Sobel edge detector listed in a folder [sobel](sobel/). An input is a fully described library of approximate components, configuration of experiments and hardware and software models.
 
-The configuration can specify multiple variants of features used. The proposed model is fully extensible for introducing new operators etc.
+The configuration can specify multiple variants of features used. The proposed model is fully extensible for introducing new operators etc. The example analysis can be seen in [sobel/analysis.ipynb](sobel/analysis.ipynb).
 
 ## Library description
 Approximate library needs to have specified some parameters (hardware and error parameters) and links to particular C functions and Verilog files.
@@ -94,8 +94,9 @@ mkdir build
 cd build
 cmake ..
 make
-./axsobel ../../../img/* < ../../res/random.runlist  > ../../res/$cls.qor
-cd ../..
+# run the evaluation for selected configurations
+./axsobel ../../../img/* < ../../res/$cls.runlist  | tee ../../res/$cls.qor
+cd ../../..
 
 python parse_qor.py sobel/config.yml $cls sobel/res/$cls.qor
 ```

@@ -39,19 +39,3 @@ proc evaluate { ds uid srcdir libList } {
     report_utilization -file ${prjdir}/results_resource.txt
     close_project
 }
-
-
-# create_project project_mul12u_0KH /media/bharath/1be0fc88-3f45-4a79-82c6-8581f4ab6516/05WS19/ASICtoFPGA/Multipliers2/12x12_unsigned/mul12u_0KH/project_mul12u_0KH -part xc7vx485tffg1157-1
-# add_files -norecurse -scan_for_includes {/media/bharath/1be0fc88-3f45-4a79-82c6-8581f4ab6516/05WS19/ASICtoFPGA/Multipliers2/12x12_unsigned/mul12u_0KH/mul12u_0KH.v}
-# update_compile_order -fileset sources_1
-# update_compile_order -fileset sources_1
-# set_property STEPS.SYNTH_DESIGN.ARGS.MAX_DSP 0 [get_runs synth_1]
-# launch_runs synth_1 -jobs 4
-# wait_on_run -timeout 60 synth_1
-# launch_runs impl_1 -jobs 4
-# wait_on_run -timeout 60 impl_1
-# open_run impl_1
-# report_power -file /media/bharath/1be0fc88-3f45-4a79-82c6-8581f4ab6516/05WS19/ASICtoFPGA/Multipliers2/12x12_unsigned/mul12u_0KH/results/power.txt
-# report_design_analysis -file /media/bharath/1be0fc88-3f45-4a79-82c6-8581f4ab6516/05WS19/ASICtoFPGA/Multipliers2/12x12_unsigned/mul12u_0KH/results/time.txt
-# report_utilization -file /media/bharath/1be0fc88-3f45-4a79-82c6-8581f4ab6516/05WS19/ASICtoFPGA/Multipliers2/12x12_unsigned/mul12u_0KH/results/resource.txt
-# exit
