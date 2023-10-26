@@ -1,3 +1,4 @@
+import glob
 import gzip
 import json
 import uuid
@@ -23,13 +24,21 @@ def main():
     print(f"# Reading {fn}")
     data = json.load(gzip.open(fn))
 
-    hw = json.load(gzip.open(c.result_path(args.dataset + ".hw.json.gz"), "rt"))
-    qor = json.load(gzip.open(c.result_path(args.dataset + ".qor.json.gz"), "rt"))
+    print(c.result_path(args.dataset + ".hw*.json.gz"))
+    files_hw = glob.glob(c.result_path(args.dataset + ".hw*.json.gz"))
+    files_qor = glob.glob(c.result_path(args.dataset + ".qor*.json.gz"))    
 
-    for d in data:
-        data[d].update(hw[d])
-        data[d].update(qor[d])
-        index = data[d].keys()
+    print("# Readning files: \n", "\n".join(files_hw+files_qor))
+
+    if not c.confirm_yes("Do you want to join the results?"):
+        return
+    
+    for fn in files_hw + files_qor:
+        print(f"# Reading {fn}")
+        input_data = json.load(gzip.open(fn, "rt"))
+        for d in input_data:
+            data[d].update(input_data[d])
+            index = data[d].keys()
     
     print("# features")
     for k in index:

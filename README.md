@@ -104,7 +104,7 @@ python parse_qor.py sobel/config.yml $cls sobel/res/$cls.qor
 ### Vivado evaluation
 ```bash
 cls=random
-python evaluate_vivado.py sobel/config.yml $cls
+python evaluate_hw.py sobel/config.yml $cls
 # repeat this part to run in parallel
 shuf sobel/res/$cls.synth.tcl > sobel/res/$cls.synth2.tcl
 vivado  << EOF
@@ -117,6 +117,19 @@ python status_vivado.py sobel/config.yml $cls
 python parse_vivado.py sobel/config.yml $cls
 ```
 
+
+### DCshell evaluation
+We support also evaluation by Synopsys Design Compiler. It creates features pdk45_pwr, pdk45_area, pdk45_delay.
+
+```bash
+ python evaluate_hw.py --mode dc sobel/config.yml random
+dc_shell << EOF
+pdk45 # load the techlibrary (not implemented here, use own!)
+source dcshell.tcl # function to synthesize
+source sobel/res/random.synth.tcl # synth all
+EOF
+python parse_dc.py sobel/config.yml $cls
+```
 
 ## Own ML model
 If you want to use own ML model, you can add a static function
