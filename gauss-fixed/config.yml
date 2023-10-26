@@ -1,0 +1,80 @@
+
+library:
+  add8_op1:
+    json: lib/add8_op1.json.gz
+    verilog: lib/add8.zip
+    c_header: lib/add8.h
+    c_source: lib/add8.c
+  add8_op2:
+    json: lib/add8_op2.json.gz
+    verilog: lib/add8.zip
+    c_header: lib/add8.h
+    c_source: lib/add8.c
+  add9_op3:
+    json: lib/add9_op3.json.gz
+    verilog: lib/add9.zip
+    c_header: lib/add9.h
+    c_source: lib/add9.c
+  add8_op4:
+    json: lib/add8_op4.json.gz
+    verilog: lib/add8.zip
+    c_header: lib/add8.h
+    c_source: lib/add8.c
+  add8_op5:
+    json: lib/add8_op5.json.gz
+    verilog: lib/add8.zip
+    c_header: lib/add8.h
+    c_source: lib/add8.c
+  add9_op6:
+    json: lib/add9_op6.json.gz
+    verilog: lib/add9.zip
+    c_header: lib/add9.h
+    c_source: lib/add9.c
+  add16:
+    json: lib/add16.json.gz
+    verilog: lib/add16.zip
+    c_header: lib/add16.h
+    c_source: lib/add16.c
+  sub16:
+    json: lib/sub16.json.gz
+    verilog: lib/sub16.zip
+    c_header: lib/sub16.h
+    c_source: lib/sub16.c
+
+# result files
+evaluate_lib: eval/lib_tuples.cpp
+evaluate_verilog: synth/template.v
+evaluate_verilog_include: synth/modules.v
+
+
+# 
+variants:
+  fpga:
+    ml: [RandomForrest, SVC, BayesianRidge] # used machine learning modes
+    objectives:  # objectives calculated by HW sysnthesis and QoR evaluation
+      qor: PSNR_AVG
+      hw: power
+    features: # features used 
+      hw: [ pdk45_pwr, pdk45_delay, pdk45_area]
+      qor: [ mae_op, var_op ]
+      
+components:
+  # module name and the link for the library
+  opAdd1: add8_op1
+  opAdd2: add8_op2
+  opAdd3: add9_op3
+  opAdd4: add8_op4
+  opAdd5: add8_op5
+  opAdd6: add9_op6
+  opAdd7: add16
+  opAdd8: add16
+  opAdd9: add16
+  opAdd10: add16
+  opSub1: sub16
+
+
+# result directory of this experiment
+results: res
+
+# temporary directory
+temporary: tmp
