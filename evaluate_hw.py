@@ -7,12 +7,14 @@ import uuid
 import argparse
 from autoax import Config
 import os
+from tqdm import tqdm
 
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('config', help='Config file (yaml)')
     p.add_argument('dataset', help='Dataset file form results (e.g. random)')
+    p.add_argument('--mode', help='Mode - vivado, dc, etc', default='vivado')
 
     args = p.parse_args()
 
@@ -34,15 +36,24 @@ def main():
 
     #print(template)
 
-    tmp_path = c.temporary_path(f"vivado/{args.dataset}/")
-    lib_path = c.temporary_path(f"vivado/{args.dataset}/lib/")
+    tmp_path = c.temporary_path(f"{args.mode}/{args.dataset}/")
+    lib_path = c.temporary_path(f"{args.mode}/{args.dataset}/lib/")
 
     run_data = []
-    for i in data:
+    for i in tqdm(data, "Creating verilog"):
         setting = {"name": i, "libfiles" : []}
 
         vt = template
         vt = vt.replace("\"uid\"", i)
+
+        setting["include"] = []
+        if "evaluate_verilog_include" in c.config:
+            # if not list, make it a list
+            if not isinstance(c.config["evaluate_verilog_include"], list):
+                c.config["evaluate_verilog_include"] = [c.config["evaluate_verilog_include"]]
+                
+            for k in c.config["evaluate_verilog_include"]:
+                setting["include"].append(os.path.join(c.cwd, k))
 
         for k, lib in c.components().items():
             comp = lib[data[i][k]]
@@ -62,7 +73,10 @@ def main():
 
     def run_format(settings):
         lf = " ".join(map(lambda x: f"\"{lib_path}/{x}\"", settings['libfiles']))
-        return f"evaluate \"{args.dataset}\" \"{settings['name']}\" \"{tmp_path}\" {{ {lf} }}"
+        ifiles = " ".join(map(lambda x: f"\"{x}\"", settings['include']))
+        
+
+        return f"evaluate \"{args.dataset}\" \"{settings['name']}\" \"{tmp_path}\" {{ {ifiles} {lf} }}"
     
     open(run_list, "w").write(
         "\n".join(map(run_format, run_data)))

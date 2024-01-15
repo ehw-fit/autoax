@@ -55,6 +55,15 @@ variants:
       hw: [ pdk45_pwr, pdk45_delay, pdk45_area]
       qor: [ mae_norm, var_norm ]
 
+  dc: # sample for design compiler
+    ml: [RandomForrest, SVC, BayesianRidge] # used machine learning modes
+    objectives:  # objectives calculated by HW sysnthesis and QoR evaluation
+      qor: PSNR_AVG
+      hw: pdk45_pwr
+    features: # features used 
+      hw: [ pdk45_pwr, pdk45_delay, pdk45_area]
+      qor: [ mae_norm, var_norm ]
+
 components:
   # module name and the link for the library
   opAdd1: add8

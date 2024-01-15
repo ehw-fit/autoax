@@ -2,8 +2,9 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2303.04734-b31b1b.svg)](https://arxiv.org/abs/2303.04734)
 
 
-# Xel-FPGAs
-This repository presents a basic scheme for evaluating Xel-FPGAs algorithm for automatic approximation of hardware accelerators. 
+# AutoAx
+
+This repository presents a basic scheme for evaluating Xel-FPGAs algorithm for automatic approximation of hardware accelerators. After integration, it also supports evaluation for ASICs and FPGAs as described in the paper autoAx [https://arxiv.org/pdf/1902.10807.pdf](arXiv:1902.10807).
 
 _Generation and exploration of approximate circuits and accelerators has been a prominent research domain to achieve energy-efficiency and/or performance improvements. This research has predominantly focused on ASICs, while not achieving similar gains when deployed for FPGA-based accelerator systems, due to the inherent architectural differences between the two. In this work, we propose a novel framework, Xel-FPGAs, which leverages statistical or machine learning models to effectively explore the architecture-space of state-of-the-art ASIC-based approximate circuits to cater them for FPGA-based systems given a simple RTL description of the target application. We have also evaluated the scalability of our framework on a multi-stage application using a hierarchical search strategy. The Xel-FPGAs framework is capable of reducing the exploration time by up to 95%, when compared to the default synthesis, place, and route approaches, while identifying an improved set of Pareto-optimal designs for a given application, when compared to the state-of-the-art._
 
@@ -30,7 +31,7 @@ sudo apt install berkley-abc
 ## Example application
 The system is easily configurable. You can follow an example for the Sobel edge detector listed in a folder [sobel](sobel/). An input is a fully described library of approximate components, configuration of experiments and hardware and software models.
 
-The configuration can specify multiple variants of features used. The proposed model is fully extensible for introducing new operators etc.
+The configuration can specify multiple variants of features used. The proposed model is fully extensible for introducing new operators etc. The example analysis can be seen in [sobel/analysis.ipynb](sobel/analysis.ipynb).
 
 ## Library description
 Approximate library needs to have specified some parameters (hardware and error parameters) and links to particular C functions and Verilog files.
@@ -94,8 +95,9 @@ mkdir build
 cd build
 cmake ..
 make
-./axsobel ../../../img/* < ../../res/random.runlist  > ../../res/$cls.qor
-cd ../..
+# run the evaluation for selected configurations
+./axsobel ../../../img/* < ../../res/$cls.runlist  | tee ../../res/$cls.qor
+cd ../../..
 
 python parse_qor.py sobel/config.yml $cls sobel/res/$cls.qor
 ```
@@ -103,7 +105,7 @@ python parse_qor.py sobel/config.yml $cls sobel/res/$cls.qor
 ### Vivado evaluation
 ```bash
 cls=random
-python evaluate_vivado.py sobel/config.yml $cls
+python evaluate_hw.py sobel/config.yml $cls
 # repeat this part to run in parallel
 shuf sobel/res/$cls.synth.tcl > sobel/res/$cls.synth2.tcl
 vivado  << EOF
@@ -116,6 +118,19 @@ python status_vivado.py sobel/config.yml $cls
 python parse_vivado.py sobel/config.yml $cls
 ```
 
+
+### DCshell evaluation
+We support also evaluation by Synopsys Design Compiler. It creates features pdk45_pwr, pdk45_area, pdk45_delay.
+
+```bash
+ python evaluate_hw.py --mode dc sobel/config.yml random
+dc_shell << EOF
+pdk45 # load the techlibrary (not implemented here, use own!)
+source dcshell.tcl # function to synthesize
+source sobel/res/random.synth.tcl # synth all
+EOF
+python parse_dc.py sobel/config.yml $cls
+```
 
 ## Own ML model
 If you want to use own ML model, you can add a static function

@@ -65,11 +65,17 @@ class Config:
             p = filename
         if os.path.exists(p):
             # Explicitly prompt user if he wants to overwrite the file
-            r = input("Result file {} already exists. Do you want to overwrite it? [y/N]".format(p))
-            if r.lower() != "y":
+            if not self.confirm_yes("Result file {} already exists. Do you want to overwrite it? [y/N]".format(p)):
                 raise Exception("Result file {} already exists. If you want to rewrite it, delete it first".format(p))
 
         return p
+    
+    def confirm_yes(self, msg):
+        """
+        Prompts the user with a message and waits for a confirmation.
+        """
+        r = input(msg + " [y/N]")
+        return r.lower() == "y"
     
     def components(self) -> dict:
         r = {}
@@ -131,6 +137,8 @@ class Config:
                     raise ValueError("Unknown module: " + k)
             variant["modules"] = m
 
+            if "random" not in variant:
+                variant["random"] = None
 
             models = {}
             for k in variant["ml"]:

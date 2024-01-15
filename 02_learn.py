@@ -56,6 +56,12 @@ if __name__ == "__main__":
         X = pd.DataFrame(ds).T
         y = pd.Series(y)
 
+        if variant["random"]:
+            X = X[:variant["random"]]
+            y = y[:variant["random"]]
+
+            print("Resize to", X.shape, y.shape)
+
 
 
         # Create data

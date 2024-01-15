@@ -15,15 +15,11 @@ from uuid import uuid1
 from autoax import Config, FeatureExtractor
 
 
-def do_hc(config, variant, iterations=10000, population=100, mutation_rate=0.1, **kwargs):
+def do_hc(config, variant, iterations=10000, population=100, seed=None, result_file = None):
     # load config and items
-    args = p.parse_args()
+    c = Config(config)
 
-    c = Config(args.config)
-
-    variant_data = c.get_variant(args.variant)
-
-    elements = json.load(gzip.open(c.result_path("random.eval.json.gz"), "rt"))
+    variant_data = c.get_variant(variant)
     libraries = c.components()
 
     items = c.components_keys()
@@ -34,7 +30,8 @@ def do_hc(config, variant, iterations=10000, population=100, mutation_rate=0.1, 
     models = {}
     objective = {}
     fe = {}
-    result_file = c.block_on_result(f"hc_{variant}.json.gz")
+    if not result_file:
+        result_file = c.block_on_result(f"hc_{variant}.json.gz")
 
     for obj in ["hw", "qor"]:
         df_q = df_quality.query("objective == @obj")
@@ -95,6 +92,9 @@ def do_hc(config, variant, iterations=10000, population=100, mutation_rate=0.1, 
             p["est_hw"] = est_hw[i]
             p["est_qor"] = est_qor[i]
         return population
+    
+    if seed:
+        random.seed(seed)
 
     parent = random_conf()
 
@@ -115,8 +115,8 @@ def do_hc(config, variant, iterations=10000, population=100, mutation_rate=0.1, 
             if dom:
                 cid2p[cid] = o
                 parent = o
-                print("\rConf: %d (%.3f %%), ndom = %d" %
-                      (rid, 100.0 * rid / iterations, pf.size()), end="")
+                #print("\rConf: %d (%.3f %%), ndom = %d" %
+                #      (rid, 100.0 * rid / iterations, pf.size()), end="")
                 # starvation_all.append(starvation)
                 starvation = 0
 
@@ -155,9 +155,8 @@ if __name__ == "__main__":
                    type=int, default=10000)
     p.add_argument('--population', help='Population size',
                    type=int, default=100)
-    p.add_argument('--mutation_rate', help='Mutation rate',
-                   type=float, default=0.1)
 
+    p.add_argument("--seed", help="Random seed", type=int, default=None)
     args = p.parse_args()
     do_hc(**vars(args))
 # %%
