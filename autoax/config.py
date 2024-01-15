@@ -137,6 +137,8 @@ class Config:
                     raise ValueError("Unknown module: " + k)
             variant["modules"] = m
 
+            if "random" not in variant:
+                variant["random"] = None
 
             models = {}
             for k in variant["ml"]:

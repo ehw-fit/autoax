@@ -15,13 +15,11 @@ from uuid import uuid1
 from autoax import Config, FeatureExtractor
 
 
-def do_nsga(config, variant, iterations=10000, p_size=200, q_size=100, mutation_rate=0.1, **kwargs):
+def do_nsga(config, variant, iterations=10000, p_size=200, q_size=100, mutation_rate=0.1, result_file=None, seed=None, **kwargs):
     # load config and items
-    args = p.parse_args()
+    c = Config(config)
 
-    c = Config(args.config)
-
-    variant_data = c.get_variant(args.variant)
+    variant_data = c.get_variant(variant)
 
     elements = json.load(gzip.open(c.result_path("random.eval.json.gz"), "rt"))
     libraries = c.components()
@@ -34,7 +32,9 @@ def do_nsga(config, variant, iterations=10000, p_size=200, q_size=100, mutation_
     models = {}
     objective = {}
     fe = {}
-    result_file = c.block_on_result(f"nsga_{variant}.json.gz")
+
+    if not result_file:
+        result_file = c.block_on_result(f"nsga_{variant}.json.gz")
 
     for obj in ["hw", "qor"]:
         df_q = df_quality.query("objective == @obj")
@@ -132,6 +132,9 @@ def do_nsga(config, variant, iterations=10000, p_size=200, q_size=100, mutation_
 
             par = [x[0] for x in vals[:-1]]
         return par
+
+    if seed:
+        random.seed(seed)
 
     # Generate random configurations
     parent = [random_conf() for _ in range(p_size)]

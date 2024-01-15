@@ -57,7 +57,33 @@ variants:
     features: # features used 
       hw: [ pdk45_pwr, pdk45_delay, pdk45_area]
       qor: [ mae_op, var_op ]
-      
+  dc:
+    ml: [RandomForrest, SVC, BayesianRidge] # used machine learning modes
+    objectives:  # objectives calculated by HW sysnthesis and QoR evaluation
+      qor: pdk45_pwr
+      hw: power
+    features: # features used 
+      hw: [ pdk45_pwr, pdk45_delay, pdk45_area]
+      qor: [ mae_op, var_op ]
+
+  fpga_1000:
+    random: 1000  # number of random samples
+    ml: [RandomForrest, SVC, BayesianRidge] # used machine learning modes
+    objectives:  # objectives calculated by HW sysnthesis and QoR evaluation
+      qor: PSNR_AVG
+      hw: power
+    features: # features used 
+      hw: [ pdk45_pwr, pdk45_delay, pdk45_area]
+      qor: [ mae_op, var_op ]
+  dc_1000:
+    random: 1000  # number of random samples
+    ml: [RandomForrest, SVC, BayesianRidge] # used machine learning modes
+    objectives:  # objectives calculated by HW sysnthesis and QoR evaluation
+      qor: pdk45_pwr
+      hw: power
+    features: # features used 
+      hw: [ pdk45_pwr, pdk45_delay, pdk45_area]
+      qor: [ mae_op, var_op ]
 components:
   # module name and the link for the library
   opAdd1: add8_op1
