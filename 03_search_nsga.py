@@ -4,7 +4,7 @@ import argparse
 from re import X
 import joblib
 from tqdm import tqdm
-from paretoarchive import PyBspTreeArchive
+from paretofront import ParetoFront
 import pandas as pd
 import numpy as np
 import json
@@ -160,7 +160,7 @@ def do_nsga(config, variant, iterations=10000, p_size=200, q_size=100, mutation_
         next_parent = []
         while len(next_parent) < p_size:
             # select pareto frontier
-            pareto = PyBspTreeArchive(len(metrics), minimizeObjective1=True, minimizeObjective2=False).filter(
+            pareto = ParetoFront(len(metrics), minimize=[True, False]).filter(
                 [[x[m] for m in metrics] for x in population], returnIds=True)
 
             current_pareto = [population[i] for i in pareto]

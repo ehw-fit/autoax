@@ -4,7 +4,7 @@ import argparse
 from re import X
 import joblib
 from tqdm import tqdm
-from paretoarchive import PyBspTreeArchive
+from paretofront import ParetoFront
 import pandas as pd
 import numpy as np
 import json
@@ -98,7 +98,7 @@ def do_hc(config, variant, iterations=10000, population=100, seed=None, result_f
 
     parent = random_conf()
 
-    pf = PyBspTreeArchive(2, minimizeObjective1=True, minimizeObjective2=False)
+    pf = ParetoFront(2, minimize=[True, False])
     cid2p = {}
     starvation = 0
 
